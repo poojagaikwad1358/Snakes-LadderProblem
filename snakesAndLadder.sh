@@ -10,14 +10,14 @@ SNAKE=3;
 #Variables
 position=$START_POS
 
-#Rolling dice to get number between 1 to 6
+#Rolling dice to get number between 1 to 6.
 function diceRoll()
 {
 	random=$(( (RANDOM % 6) +1 ))
 	echo "Dice roll result: "$random
 }
 
-#Function to get no play, ladder & snake
+#Function to get no play, ladder & snake.
 function playing()
 {
 	choice=$(( (RANDOM % 3) +1 ))
@@ -28,8 +28,15 @@ function playing()
 			echo "No move player have same position."
 			;;
 		$LADDER)
-			position=$(( $position + $random ))
-			echo "You got Ladder move forword by $position."
+			#Performing operation to get exact winning position 100.
+			temp=$(( $position + $random ))
+			if [ $temp -gt 100 ]
+			then
+				echo "You can't move."
+			else
+				position=$temp
+				echo "You got Ladder move forword by $position."
+			fi
 			;;
 		$SNAKE)
 			position=$(( $position - $random ))
@@ -42,7 +49,7 @@ function playing()
 	esac
 }
 
-#Performing continuous playing to reach at 100 position
+#Performing continuous playing to reach at 100 position.
 while [ $position -lt 100 ]
 do
 	playing
