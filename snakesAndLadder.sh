@@ -9,12 +9,16 @@ SNAKE=3;
 
 #Variables
 position=$START_POS
+noOfDiceRolls=0
 
 #Rolling dice to get number between 1 to 6.
 function diceRoll()
 {
 	random=$(( (RANDOM % 6) +1 ))
 	echo "Dice roll result: "$random
+
+	#Get how many times dice roll to win game
+	noOfDiceRolls=$(( $noOfDiceRolls + 1 ))
 }
 
 #Function to get no play, ladder & snake.
@@ -54,3 +58,5 @@ while [ $position -lt 100 ]
 do
 	playing
 done
+
+echo "Total number of times dice rolls: "$noOfDiceRolls
