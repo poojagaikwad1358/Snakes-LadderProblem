@@ -12,6 +12,7 @@ SNAKE=3;
 #Variables
 noOfDiceRolls=0
 noOfPlayers=2
+turn=0;
 
 for(( i=1; i<=$noOfPlayers; i++ ))
 do
@@ -21,17 +22,19 @@ done
 #Rolling dice to get number between 1 to 6.
 function diceRoll()
 {
-	random=$(( (RANDOM % 6) +1 ))
+	random=$(( (RANDOM % 6) + 1 ))
 	echo "Dice roll result: "$random
 
 	#Get how many times dice roll to win game
 	noOfDiceRolls=$(( $noOfDiceRolls + 1 ))
+
+	return $random
 }
 
 #Function to get no play, ladder & snake.
 function playing()
 {
-	choice=$(( (RANDOM % 3) +1 ))
+	choice=$(( (RANDOM % 3) + 1 ))
 	diceRoll
 
 	case $choice in
@@ -52,23 +55,26 @@ function playing()
 					playing
 				fi
 			fi
-			;;
+		;;
 		$SNAKE)
-			players[$key]=$(( ${players[$key]} - $random ))
-			if [ ${players[$key]} -lt 0 ]
-			then
-				players[$key]=$START_POS
-			fi
-			echo "You got Snake move backward by ${players[$key]}."
-			;;
+			 temp=$(( ${players[key]} - $random ))
+         if [ $temp -gt 100 ]
+         then
+            echo "You can't move."
+         else
+            players[$key]=$temp
+				echo "You got Snake move backward by ${players[$key]}."
+            if [ ${players[$key]} -lt 0 ]
+            then
+               players[$key]=$START_POS
+            fi
+         fi
+		;;
 	esac
 }
 
-#variables
-flag=0
-
 #Performing operation to display turn & winner.
-while [ $flag -ne 1 ]
+while [ $turn -ne 1 ]
 do
 	for key in ${!players[@]}
 	do
@@ -76,7 +82,7 @@ do
 		playing
 		if [ ${players[$key]} -eq 100 ]
 		then
-			flag=1
+			turn=1
 			echo "Player $key wins."
 			break;
 		fi
